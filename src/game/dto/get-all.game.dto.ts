@@ -41,7 +41,7 @@ export class GetAllGameDto extends PaginationDto {
 
     @IsOptional()
     @IsString()
-    isAdultOnly: string
+    isAdultOnly?: string
 }
 
 /* const queryParameters = {
