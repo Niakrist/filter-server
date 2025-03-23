@@ -61,10 +61,10 @@ export class GameService {
         return [{ price: 'asc' }]
       case EnumGameSort.HIGH_PRICE:
         return [{ price: 'desc' }]
-      case EnumGameSort.OLDEST:
-        return [{ price: 'asc' }]
+      case EnumGameSort.OLDEST: 
+        return [{ relaseDate: 'asc' }]
       default:
-        return [{ price: 'desc' }]
+        return [{ relaseDate: 'desc' }]
     }
   }
 
