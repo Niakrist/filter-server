@@ -12,22 +12,22 @@ export class GameService {
     private paginationServices: PaginationService
   ) { }
 
-  
+
   async findAll(dto: GetAllGameDto = {}) {
 
-    const {perPage, skip} = this.paginationServices.getPagination(dto)
+    const { perPage, skip } = this.paginationServices.getPagination(dto)
     const filters = this.createFilter(dto)
 
     const games = await this.prisma.game.findMany({
       where: filters,
-      orderBy: this.getSortOption(dto.sort),
+      orderBy: this.getSortOption(dto.sort ?? EnumGameSort.NEWEST),
       skip,
       take: perPage
     })
 
     return {
       games,
-      length: await this.prisma.game.count({where: filters})
+      length: await this.prisma.game.count({ where: filters })
     }
   }
 
@@ -36,22 +36,25 @@ export class GameService {
     if (dto.searchTerm) {
       filters.push(this.getSearchTermFilter(dto.searchTerm))
     }
-    if(dto.rating) {
+    if (dto.rating) {
       filters.push(this.getRatingFilter(+dto.rating))
     }
     if (dto.minPrice || dto.maxPrixe) {
-      filters.push(this.getPriceFilter(convertToNumber(dto.minPrice), convertToNumber(dto.maxPrixe)))
+      filters.push(this.getPriceFilter(
+        dto.minPrice ? convertToNumber(dto.minPrice) : undefined,
+        dto.maxPrixe ? convertToNumber(dto.maxPrixe) : undefined
+      ))
     }
-    if (dto.genres){
+    if (dto.genres) {
       filters.push(this.getGenreFilter(dto.genres));
     }
-    if(dto.platform) {
+    if (dto.platform) {
       filters.push(this.getPlatformFilter(dto.platform))
     }
-    if(dto.isAdultOnly !== undefined) {
+    if (dto.isAdultOnly !== undefined) {
       filters.push(this.getAdultOnlyFilter(dto.isAdultOnly))
     }
-    return filters.length ? {AND: filters} : {}
+    return filters.length ? { AND: filters } : {}
   }
 
 
@@ -61,7 +64,7 @@ export class GameService {
         return [{ price: 'asc' }]
       case EnumGameSort.HIGH_PRICE:
         return [{ price: 'desc' }]
-      case EnumGameSort.OLDEST: 
+      case EnumGameSort.OLDEST:
         return [{ relaseDate: 'asc' }]
       default:
         return [{ relaseDate: 'desc' }]
@@ -106,22 +109,27 @@ export class GameService {
     maxPrice?: number
   ): Prisma.GameWhereInput {
     let priceFilter: Prisma.NestedFloatFilter | undefined = undefined
+    if (minPrice || maxPrice) {
+      priceFilter = {}; // Initialize the object
+      if (minPrice) {
+        priceFilter = {
+          ...priceFilter,
+          gte: minPrice
+        }
+      }
+      if (maxPrice) {
+        priceFilter = {
+          ...priceFilter,
+          lte: maxPrice
+        }
+      }
+      return {
+        price: priceFilter
+      }
+    }
 
-    if (minPrice) {
-      priceFilter = {
-        ...priceFilter,
-        gte: minPrice
-      }
-    }
-    if (maxPrice) {
-      priceFilter = {
-        ...priceFilter,
-        lte: maxPrice
-      }
-    }
-    return {
-      price: priceFilter
-    }
+    return {}
+
   }
 
 
