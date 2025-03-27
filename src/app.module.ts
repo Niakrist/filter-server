@@ -9,7 +9,7 @@ import { PaginationModule } from './pagination/pagination.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
+      rootPath: join(__dirname, '..', '..' , 'uploads'),
       serveRoot: '/uploads'
     }),
     GameModule,

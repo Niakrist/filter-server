@@ -138,7 +138,7 @@ export class GameService {
     const genresArray = genres.split('|') as Genres[]
     return {
       genres: {
-        hasSome: genresArray
+        hasEvery: genresArray
       }
     }
   }
