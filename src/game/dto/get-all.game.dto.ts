@@ -37,7 +37,7 @@ export class GetAllGameDto extends PaginationDto {
 
     @IsOptional()
     @IsString()
-    maxPrixe?: string
+    maxPrice?: string
 
     @IsOptional()
     @IsString()

@@ -39,10 +39,10 @@ export class GameService {
     if (dto.rating) {
       filters.push(this.getRatingFilter(+dto.rating))
     }
-    if (dto.minPrice || dto.maxPrixe) {
+    if (dto.minPrice || dto.maxPrice) {
       filters.push(this.getPriceFilter(
         dto.minPrice ? convertToNumber(dto.minPrice) : undefined,
-        dto.maxPrixe ? convertToNumber(dto.maxPrixe) : undefined
+        dto.maxPrice ? convertToNumber(dto.maxPrice) : undefined
       ))
     }
     if (dto.genres) {
